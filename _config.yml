@@ -1,12 +1,10 @@
 # Site settings
-title: Daktilo
+title: Impl->Selector
 description: >
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
+  与思想为伴,愿有火花; 与自由同行,愿梦可达.
 
 baseurl: "" # the subpath of your site, e.g. /blog/
-url: "http://hitchhiker.ma" # the base hostname & protocol for your site
+url: "" # the base hostname & protocol for your site
 
 author:
   fullname: Motaquillah Maddane
