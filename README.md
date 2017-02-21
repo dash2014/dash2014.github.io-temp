@@ -1,58 +1,62 @@
+# end2end
 
-[**Demo**](http://webjeda.com/vyaasa/)
+[![Build Status](https://travis-ci.org/nandomoreirame/end2end.svg?branch=master)](https://travis-ci.org/nandomoreirame/end2end)
 
-# Features:
-Vyaasa is a theme made for blogs with long text paragraphs. Made to be easy on eyes as well. 
+Clean Jekyll theme
 
-Suitable fonts are selected for better readability. Since the theme is created for smartphone reading, the theme is very light so that it loads instantly on a slow data connection.
+> :warning:
+  This theme requires ruby and rubygems installed
 
-The theme comes with pre-installed **analytics**, **disqus** and **html compressor**. But make sure you change key parameters in the **_config.yml** file.
+* [x] Clean layout
+* [x] Resposive layout
+* [x] Preprocessor SASS
+* [x] CSS minified
+* [x] Pagination
+* [x] Syntax highlight
+* [x] Author config
+* [x] Comments with Disqus
+* [ ] Search posts
+* [ ] Share posts
 
-# Installation: 
-Fork the ``master`` branch and delete ``gh-pages`` branch in it. This is important because ``gh-pages`` branch is used here only to host the blog. You should be using the master branch as the source and create a fresh ``gh-pages`` branch.
+---
 
-Watch my video on instlallation
-<iframe class="video" src="https://www.youtube.com/embed/T2nx6tj-ZH4?rel=0?rel=0" frameborder="0" allowfullscreen></iframe>
+### Start in 4 steps
 
-## How to delete old **gh-pages** branch?
-After forking the repository, click on **branches**.
+1. Download or clone repo `git clone git@github.com:nandomoreirame/end2end.git`
+2. Enter the folder: `cd end2end/`
+3. Install Ruby gems: `bundle install`
+4. Start Jekyll server: `bundle exec jekyll serve`
 
-![delete gh-pages branch](http://blog.webjeda.com/images/delete-github-branch.png)
+Access, [localhost:4000/end2end](http://localhost:4000/end2end)
 
-Delete ``gh-pages`` branch.
-![delete gh-pages branch](http://blog.webjeda.com/images/delete-github-branch-2.png)
+### Deploy in Github pages in 2 steps
 
-You have to create a new ``gh-pages`` branch using the master branch. Go back to the forked repository and create ``gh-pages`` branch.
+1. Change the variables `GITHUB_REPONAME` and `GITHUB_REPO_BRANCH` in `Rakefile`
+2. Run `rake` or `rake publish` for build and publish on Github
 
-![create gh-pages branch](http://blog.webjeda.com/images/create-gh-pages-branch.JPG)
+---
 
-Now, go to settings and check the **Github Pages** section. You should see a URL where the blog is hosted.
+### Using Rake tasks
 
-This process will host the theme as a **Project Page**. You can also download the files for local development. 
+* Create a new page: `rake page name="contact.md"`
+* Create a new post: `rake post title="TITLE OF THE POST"`
 
-The default theme will look like this
+---
 
-![webjeda vyaasa jekyll theme](/images/vyaasa-jekyll-theme-1.png)
+### Demo and Download
 
+[Demo](http://nandomoreira.me/end2end/)
+[Download](https://github.com/nandomoreirame/end2end/archive/master.zip)
 
+![end2end - free Jekyll theme](/screenshot.png)
 
-A sample post would look like this
+---
 
-![webjeda vyaasa jekyll theme sidebar](/images/vyaasa-jekyll-theme-2.png)
+### Copyright and license
 
+It is under [the MIT license](/LICENSE).
 
-This theme is made especially for smartphones.
+> :warning:
+  Please remove metas `<meta name="robots" content="noindex">` and `<meta name="googlebot" content="noindex">` in `source/_layouts/default.html`
 
-![webjeda vyaasa responsive jekyll theme](/images/vyaasa-responsive-jekyll-theme-1.png)
-
-
-# Development
-Make changes to the **master** branch and create a pull request. Do not use **gh-pages** branch as it is used to host the theme.
-
-# License
-MIT License
-
-# Change Log
-
-### Version 0.8
-* Initial release with a reader-friendly layout.
+Enjoy :yum:
