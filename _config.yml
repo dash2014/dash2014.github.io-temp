@@ -1,5 +1,5 @@
 # Site settings
-title: Impl->Selector
+title: Selector
 description: >
   与思想为伴,愿有火花; 与自由同行,愿梦可达.
 
@@ -8,9 +8,9 @@ url: "" # the base hostname & protocol for your site
 
 author:
   fullname: Motaquillah Maddane
-  googleplus: https://www.google.com/+MotaquillahMaddane
-  github: kronik3r
-  twitter: electrik_frog
+  # googleplus: https://www.google.com/+MotaquillahMaddane
+  github: dash2014
+  # twitter: electrik_frog
   # disqus: your_disqus_forum_shortname
 
 # google_analytics: 'UA-XXXXXXXX-X'
