@@ -7,9 +7,9 @@ layout: default
     {{ content }}
 </div>
 
-{% include post/about.html %}
-
-{% include externals/disqus.html %}
 {% if site.intensedebate_comments %}
-      {% include intensedebate-comments.html %}
+    {% include intensedebate-comments.html %}
 {% endif %}
+
+
+{% include post/about.html %}
