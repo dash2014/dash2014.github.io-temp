@@ -1,4 +1,4 @@
-[![Bitdeli Badge](https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2976595959,1894429398&fm=23&gp=0.jpg)]
+![Bitdeli Badge](https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2976595959,1894429398&fm=23&gp=0.jpg)
 
 # 大史在路上
 
