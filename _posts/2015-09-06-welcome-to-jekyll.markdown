@@ -1,28 +1,18 @@
 ---
 layout: post
-title:  "Welcome to Jekyll!"
-subtitle: "Feel home!"
-date:   2015-09-06 23:34:01
+title:  "生活没那么多不期而至"
+subtitle: "三月的第一天"
+date:   2017-03-01 11:34:01
 categories: [life]
 ---
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
 
-To add new posts, simply add a file in the `_posts` directory that follows the convention `YYYY-MM-DD-name-of-post.ext` and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+生活并不是一味的枯燥无味，但也没那么多不期而至，就好像你期待远方的海和故乡的穿暖花开一样，都会看到，但需要远行的计划和适度的观察。
 
-Jekyll also offers powerful support for code snippets:
+北京的春天，干燥且寒冷，每次都计划开始一些新的尝试，去尝试忽略多少次的无功而返，闲暇下，一杯白水的静止的时光，总会让思绪荡漾起懒散的涟漪，索性让懒散属于文字，去记录生活，记录那时的所想所念。
 
-{% highlight ruby %}
-def print_hi(name)
-  puts "Hi, #{name}"
-end
-print_hi('Tom')
-#=> prints 'Hi, Tom' to STDOUT.
-{% endhighlight %}
+走过冬天，这座城市重新回归躁动的轨迹，地铁里，办公室里拥挤的嘈杂，站在四维空间之上，回忆这时与从前的自己，线条刻画的容貌变化细微，单调行进的轨迹重叠严重，还好春天来了，暖了，去变更一下行进的路线，去找寻一下时光里的诗和远方，挺好。
 
-Check out the [Jekyll docs][jekyll] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll’s GitHub repo][jekyll-gh]. If you have questions, you can ask them on [Jekyll’s dedicated Help repository][jekyll-help].
+生活并没有那么多不期而至，那些美好需要去思考，去感受，去得到，就好比苦燥的时候，路边的垂柳已经泛绿，这只是它生命中的一次周期，一次旅行，之于我们，便是一次美丽的邂逅。
 
-[jekyll]:      http://jekyllrb.com
-[jekyll-gh]:   https://github.com/jekyll/jekyll
-[jekyll-help]: https://github.com/jekyll/jekyll-help
-
+**多期待一下生活中那些美好，虽然这生活也并不富饶。**
 
