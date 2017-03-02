@@ -22,12 +22,13 @@ categories: [tech]
 ### 初始化state
 
 state需要在ReactNative页面的初始构造函数中配置，具体写法如下：
-```javascript
+{% highlight javascript %}
 constructor(props) {
     super(props);
     this.state = {shouldDisplay:true};
   }
-```
+{% endhighlight %}
+
 
 ###读取和更改state
 
@@ -57,7 +58,7 @@ constructor(props) {
  * **页面状态来源不统一：**
 	 * 场景：个人信息页面，部分状态来源于上层界面传入，部分状态来源于网络请求获取，如果两种状态存在重叠，就会导致不同时刻的状态不明确 
 	 * 痛点：不要在页面到处调用setState，尤其在存在异步或者很多业务逻辑代码的时候，会导致页面不具有可读性和可维护性
-
+	 
 ##Redux来管理state
 
 ### Redux设计思想
@@ -70,7 +71,7 @@ constructor(props) {
 * 用户增加MiddleWare用于做其他操作，比如打log等对状态和流程无侵入的操作
 * Store自动调用Reducer，接收当前的State和Action，返回新的State
 * State发生变化之后Store调用监听函数，触发重新渲染View
-![ |center | 400X400](http://7xsw5d.com1.z0.glb.clouddn.com/137.pic.jpg)
+![ |center | 200X200](http://7xsw5d.com1.z0.glb.clouddn.com/137.pic.jpg)
 
 整体来看，Redux解决了state反复传递和过于分散的问题，并且提供了一种很好的状态和组件分类的思路，middleWare思想灵活且内聚，但有先进性一定有潜在的问题，先说明我的几点考虑Redux的问题，思考一下~
 * Redux提供单一store，其采用了单一状态树的结构来存储状态，如果业务特别大，特别是结构复杂的体系会不会有什么瓶颈或者问题（仅仅是考虑）
