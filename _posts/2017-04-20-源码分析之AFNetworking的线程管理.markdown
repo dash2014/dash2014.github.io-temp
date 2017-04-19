@@ -44,8 +44,6 @@ static void url_session_manager_create_task_safely(dispatch_block_t block) {
 {% endhighlight %}
 
 - **数据处理线程：**该线程是在网络请求完成时的回调里，用于完成反序列化，配置userInfo等操作，具体的定义和调用如下：
-
-	* 创建线程
 	
 	{% highlight javascript %}
 	 static dispatch_queue_t url_session_manager_processing_queue() {
@@ -57,8 +55,6 @@ static void url_session_manager_create_task_safely(dispatch_block_t block) {
 	    return af_url_session_manager_processing_queue;
 	}
 	{% endhighlight %}
-	
-	* 线程异步
 	
 	{% highlight javascript %}
 		- (void)URLSession:(__unused NSURLSession *)session
