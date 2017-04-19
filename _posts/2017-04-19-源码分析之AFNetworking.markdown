@@ -16,7 +16,7 @@ categories: [tech]
 
 	* 承载了整个Session的创建
 	
-	*  task的生成，包括普通的task，以及uploadTask，downloadTask，以及一组相关的方法
+	*  task的生成，包括普通的task，uploadTask，downloadTask，以及一组相关的方法
 	
 	*  提供默认的responseSerializer, 以及securityPolicy
 	
