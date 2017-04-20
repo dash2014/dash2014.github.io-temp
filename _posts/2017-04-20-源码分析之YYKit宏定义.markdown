@@ -1,0 +1,41 @@
+---
+layout: post
+title:  "源码拆解之YYKit系列一"
+subtitle: ""
+date:   2017-04-19 20:54:01
+categories: [tech]
+---
+
+> 源码拆解之YYKit系列一（宏定义）
+
+YYKit是国内开发者贡献的一个非常优秀的开源库，里面封装了很多category以及很多工具类，目前在github上一共有9.8k个star，github地址为：https://github.com/ibireme/YYKit，鉴于其贡献的内容较多，这个库的拆解也会分几个部分来逐一拆解。
+
+本篇文章就先简单的说一下YYKitMacro这个宏定义文件，包括里面的一些用法
+
+* **YY_CLAMP：**这个宏定义主要描述了某个值x在low和high范围之内的约束，个人觉得，其应该判断一下low和high的大小，不然传值反了，会得到错误的结果。
+
+* **YY_SWAP：**这个宏定义主要是用来进行值交换，为了确保精度不丢失以及类型一致，坐着采用了读取参数 _a_ 的类型
+
+* **YYAssertNil系列：**这个宏定义主要封装了系统的NSAssert以及NSCAssert，前者适用于OC，后者适用于C函数
+
+* **YYSYNTH_DUMMY_CLASS：**这个文件中的小亮点之一，我们都知道在加载静态库的分类时候找不到分类中的方法，进而发生崩溃，解决的办法通常都是在info.plist配置-all_load或者-force_load，但作者采用了另一种解决办法，使得在加载这个库的时候对工程无侵入，具体如下：
+{% highlight javascript %}
+ifndef YYSYNTH_DUMMY_CLASS
+define YYSYNTH_DUMMY_CLASS(_name_) 
+@interface YYSYNTH_DUMMY_CLASS_ ## _name_ : NSObject @end 
+@implementation YYSYNTH_DUMMY_CLASS_ ## _name_ @end
+endif
+{% endhighlight %}
+
+	* **为什么这段代码可以避免这个问题？**，OC的链接器只会为类建立一个符号表，而并不会为每个方法建立符号表，因此如果静态库中如果定义了已存在的一个类的分类的话，链接器并不能将分类的代码和核心代码合并，因此最后的可执行文件中就会缺少分类的代码，因此函数的调用就会失败，这段宏定义呢，会虚拟建一个与category相同的.h.m，这样在链接的时候就可以找到该方法了，具体的OC中category的底层实现和加载方式可以参考这篇文章http://ios.jobbole.com/84341/，个人觉得写得不错。
+
+* **YYSYNTH_DYNAMIC_PROPERTY_OBJECT：**利用关联对象动态添加属性
+
+* **weakify，strongify：**这是一个很亮眼的写法，我们都知道block与self导致的循环引用需要weak和strong来解决循环引用的问题，这里作者声明了两个宏weakify，strongify，其中debug模式下autoreleasepool{}和release模式下try@finally的作用仅仅是为了在weakify和strongify前面写上@符号，区别于普通的源码，nice。当然RAC中也有类似的写法。现有的工程均可以借鉴。
+
+* **static inline：**采用内联函数的方式，在编译的时候，会把代码直接嵌入调用代码中，提高函数调用效率。
+
+仔细分析YYKitMacro这个宏定义的文件，其中的亮点还是很值得学习和参考的，后面会继续拆解。
+
+**任何技术有其优点必有其局限，保持观望，保持学习**
+
