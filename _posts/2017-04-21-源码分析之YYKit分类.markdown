@@ -1,0 +1,32 @@
+---
+layout: post
+title:  "源码拆解之YYKit系列二"
+subtitle: ""
+date:   2017-04-21 11:54:01
+categories: [tech]
+---
+
+> 源码拆解之YYKit系列二（分类）
+
+上篇对YYKit中宏文件的拆解，本篇决定对Base目录下Foundation，UIKit，Quarz目录进行拆解。由于涉及到的文件比较多，本篇幅只记录个人认为那些比较优秀的或者在OC编程中不是很常用的实现方式。
+
+- 可变参数列表，采用va_list声明一个可变参数列表args，之后采用va_start将可变参数赋值给args，利用va_end释放临时参数，具体代码如下：
+{% highlight javascript %}
+va_list args; \
+va_start(args, _last_arg_); \
+[NSObject setInv:inv withSig:sig andArgs:args]; \
+va_end(args);
+{% endhighlight %}
+
+- 通过block的形式使用KVO，block的代码集中式管理优点想必大家也都清晰
+
+- 大量的c方法调用，可以看到作者在封装各种category的时候很多地方直接采用了c方法调用，这样做会比直接使用OC的代码效率高一些
+
+- NSThread中runloop的操作，具体runloop的细节可以参考这篇文章：[http://www.cocoachina.com/ios/20150601/11970.html](runloop)
+
+- oneway, 允许oc的对象在不同的线程中使用，不会阻塞调用线程。
+
+本篇幅较短，作者在封装扩展的时候，封装了非常巨量的便捷方法，下一篇分析一下YYModel，还要说一句，大赞开源~
+
+**任何技术有其优点必有其局限，保持观望，保持学习**
+
