@@ -1,0 +1,38 @@
+---
+layout: post
+title:  "源码拆解之YYKit系列四"
+subtitle: ""
+date:   2017-04-23 11:54:01
+categories: [tech]
+---
+
+> 源码拆解之YYKit系列四（工具类）
+
+接前文，继续分析YYKit，YYKit提供了大量的工具类，整体存放在Utility目录下，本篇幅继续拆解一下这些工具类的写法。
+
+- **YYReachablity：**用于检测网络状态的一个工具，创建一个后台线程，用于可以用来检测网络是否可达，也可以实时检测网络状态，也采用notifyBlock进行回调。
+
+- **YYGestureRecognizer：**继承自UIGesture，主要目的是可以通过block来实时获取任意时刻的移动的point。
+
+- **YYFileHash：**列举了大量的文件hash算法，同时采用一些c方法来加快处理速度。
+
+- **YYKeyChain：**封装了一个Item用来处理数据，同时封装了YYKeyChain暴露增删改查的接口。
+
+- **YYWeakProxy：**持有weak对象，防止循环引用，继承自NSProxy，通过将target设置成weak，来达到破坏循环引用的目的，比如NSTimer与self。
+
+- **YYTimer：**利用Dispatch Source Timer封装成类似NSTimer的接口，更加高效和接近系统使用方式。
+
+- **YYTransaction：**创建一个Transaction对象，并在主线程休眠或者退出之前，使其target执行对应的selector方法。
+
+- **YYAsyncLayer：**将图形的绘制放在后台线程操作，在绘制完成之后将其异步会主线程显示，通过设定willDisplay，display，didDisplay三个block来完成特定步骤的回调设置。
+
+- **YYSentinel：**通过原子操作，保证数据的线程安全。
+
+- **YYDispatchQueuePool：**，在iOS8.0之后，GCD提供了可以通过根据不同的QOS，配置不同的queue_attr，进而生成不同状态的queue，作者通过配置不同的QOS，生成不同的queue，并将其提供出去。
+
+- **YYThreadSafeArray，YYThreadSafeDictionary：**利用GCD对资源进行上锁操作，以达到线程安全的效果。
+
+本篇幅简要的分析了作者提供的开源工具类，在质量和数量上都相当可观，其中很多工具都已经在工程项目中使用，很多值得借鉴、参考和学习的地方。
+
+**任何技术有其优点必有其局限，保持观望，保持学习**
+
