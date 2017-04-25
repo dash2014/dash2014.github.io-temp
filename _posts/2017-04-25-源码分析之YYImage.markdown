@@ -29,9 +29,8 @@ categories: [tech]
 - **YYImageCache：**引用了YYCache来进行图片的存储。
 
 **YYWebImageOperation**线程分析：这里面一共涉及两个线程操作，分别叫做_imageQueue和_networkThread，此处其在从内存缓存中获取采用了同步的方式，而从磁盘中获取的时候将其异步到_imageQueue去获取，而从磁盘获取到图片或者发送网络请求，图片处理统一在_imageQueue处理，而网络回调则统一在_networkThread中进行。具体代码如下：
-**_startOperation内存缓存图片直接获取**
+* **_startOperation内存缓存图片直接获取**
  {% highlight javascript %}
-  //忽略
 UIImage *image = [_cache getImageForKey:_cacheKey withType:YYImageCacheTypeMemory];
   if (image) {
       [_lock lock];
@@ -44,9 +43,8 @@ UIImage *image = [_cache getImageForKey:_cacheKey withType:YYImageCacheTypeMemor
   }
 }
 {% endhighlight %}
-**异步到imageQueue中获取图片，同时将图片回调处理放在_networkThread中进行**
+* **异步到imageQueue中获取图片，同时将图片回调处理放在_networkThread中进行**
  {% highlight javascript %}
-  //忽略
 dispatch_async([self.class _imageQueue], ^{
      __strong typeof(_self) self = _self;
      if (!self || [self isCancelled]) return;
@@ -58,13 +56,10 @@ dispatch_async([self.class _imageQueue], ^{
          [self performSelector:@selector(_startRequest:) onThread:[self.class _networkThread] withObject:nil waitUntilDone:NO];
      }
  });
- //忽略
 {% endhighlight %}
-**//收到网络请求完成回调，异步到imageQueue进行图片处理，同时异步到网络线程进行网络回调**
+* **收到网络请求完成回调，异步到imageQueue进行图片处理，同时异步到网络线程进行网络回调**
  {% highlight javascript %}
 (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-//忽略
- 
        dispatch_async([self.class _imageQueue], ^{
                       [self performSelector:@selector(_didReceiveImageFromWeb:) onThread:[self.class _networkThread] withObject:image waitUntilDone:NO];
        }}
