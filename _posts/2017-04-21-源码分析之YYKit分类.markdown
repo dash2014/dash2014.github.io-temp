@@ -11,10 +11,9 @@ categories: [tech]
 上篇对YYKit中宏文件的拆解，本篇决定对Base目录下Foundation，UIKit，Quarz目录进行拆解。由于涉及到的文件比较多，本篇幅只记录个人认为那些比较优秀的或者在OC编程中不是很常用的实现方式。
 
 - 可变参数列表，采用va_list声明一个可变参数列表args，之后采用va_start将可变参数赋值给args，利用va_end释放临时参数，具体代码如下：
-	{% highlight javascript %}
 	va_list args; va_start(args, _last_arg_); [NSObject setInv:inv withSig:sig andArgs:args]; va_end(args);
-	{% endhighlight %}
-	
+{% endhighlight %}
+
 - 通过block的形式使用KVO，block的代码集中式管理优点想必大家也都清晰
 
 - 大量的c方法调用，可以看到作者在封装各种category的时候很多地方直接采用了c方法调用，这样做会比直接使用OC的代码效率高一些
