@@ -18,6 +18,7 @@ YYCache是一个线程安全的KV缓存类，里面主要包含了四个类，YY
 	      [holder count]; // release in queue
 	  });
 	{% endhighlight %}
+
 - **YYDiskCache：**该类应该与YYKVStorageItem一起来讨论，YYKVStorageItem封装了文件类型存储，SQlite存储，以及文件与SQLite混合存储三种方式，同时暴露出一些接口供YYDiskCache交互，大致就是不同类型的增、删、改、查，不细分析了，而YYDiskCache则封装了类似YYMemeoryCache的API，提供给YYCache调用。而其中的数据操作都采用了dispatch_semaphore_wait来保证数据一致性。
 
 整体来看，作者在cache的数据一致性上，以及存储及删除算法上面做了很多的事情，另外无论增删改查均异步到后台线程处理，保证了主线程的流畅。
