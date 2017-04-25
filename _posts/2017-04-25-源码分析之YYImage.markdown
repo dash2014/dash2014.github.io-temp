@@ -8,8 +8,6 @@ categories: [tech]
 
 > 源码拆解之YYKit系列五（YYImage）
 
-# YYKit之YYImage
-
 本篇幅继续描述YYKit，主要拆解YYImage目录，YYImage提供了不同种类的图片加载，包括单张图片，多张图片，gif图等，为此其设计了几个类来包括这些内容，主要为YYImage，YYFrameImage，YYSpriteSheetImage等，它们均实现了YYAnimatedImage协议，这个协议提供了一些方法，统一了单张图片，动图与静态图片的处理方式，同时也提供了YYAnimatedImageView用来承载Image，YYImageCoder用作不同格式的图片的编解码工作。这部分内容由于个人对涉及图片格式的编解码等操作不是很熟悉，不做拆解，下面主要拆解网络图片部分。
 
 - **Categories：**这部分工作主要是提供了一些分类，用于ImageView以及Button、Layer等图片的渲染及加载，大致流程如下：
