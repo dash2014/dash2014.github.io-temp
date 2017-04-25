@@ -1,0 +1,77 @@
+---
+layout: post
+title:  "源码拆解之YYKit系列五"
+subtitle: ""
+date:   2017-04-25 17:54:01
+categories: [tech]
+---
+
+> 源码拆解之YYKit系列五（YYImage）
+
+# YYKit之YYImage
+
+本篇幅继续描述YYKit，主要拆解YYImage目录，YYImage提供了不同种类的图片加载，包括单张图片，多张图片，gif图等，为此其设计了几个类来包括这些内容，主要为YYImage，YYFrameImage，YYSpriteSheetImage等，它们均实现了YYAnimatedImage协议，这个协议提供了一些方法，统一了单张图片，动图与静态图片的处理方式，同时也提供了YYAnimatedImageView用来承载Image，YYImageCoder用作不同格式的图片的编解码工作。这部分内容由于个人对涉及图片格式的编解码等操作不是很熟悉，不做拆解，下面主要拆解网络图片部分。
+
+- **Categories：**这部分工作主要是提供了一些分类，用于ImageView以及Button、Layer等图片的渲染及加载，大致流程如下：
+	* 首先cancel当前的operation，同时获取当前的哨兵，哨兵的值采用原子操作增加。
+	* 异步到主线程，先判断是否传输过来的imageURL正常，以及决定是否设定placeHolder。
+	*  从cache里面获取图片信息，如果存在直接加载，则进行渲染，同时回调完成，如果不存在，则异步到后台线程，配置progress和completion两个Block，通过setter配置operation，进行网络请求，成功后回调，接下来我们开始拆分setter。
+
+- **_YYWebImageSetter：**私有类，主要的作用就是通过信号量以及哨兵来控制operation的操作，确保在进行网络请求以及获取imageURL时的线程安全，其内部直接调用YYWebImageManager的方法生成operation，具体代码如下：
+ {% highlight javascript %}
+ NSOperation *operation = [manager requestImageWithURL:imageURL options:options progress:progress transform:transform completion:completion];
+{% endhighlight %}
+
+- **YYWebImageManager：**通过配置Http的各种参数生成request，后用request   等信息生成operation，同时将operation加入到operationQueue中，代码较少，核心代码很容易读懂，此处就不再贴了。
+
+- **YYWebImageOperation：**网络图片请求的核心类，继承自NSOperation类，重写了operation的各种方法，包括start，cancel等，在**_startOperation**中，先从内存缓存中读取图片信息，如果内存缓存中没有，则从磁盘缓存中读取图片信息，如果磁盘缓存中有，则将其设置到内存缓存中，如果磁盘缓存中没有，则执行网络请求，同时控制网络活跃数量。请求成功后完成回调及缓存设置等操作。
+
+- **YYImageCache：**引用了YYCache来进行图片的存储。
+
+**YYWebImageOperation**线程分析：这里面一共涉及两个线程操作，分别叫做_imageQueue和_networkThread，此处其在从内存缓存中获取采用了同步的方式，而从磁盘中获取的时候将其异步到_imageQueue去获取，而从磁盘获取到图片或者发送网络请求，图片处理统一在_imageQueue处理，而网络回调则统一在_networkThread中进行。具体代码如下：
+**_startOperation内存缓存图片直接获取**
+ {% highlight javascript %}
+  //忽略
+UIImage *image = [_cache getImageForKey:_cacheKey withType:YYImageCacheTypeMemory];
+  if (image) {
+      [_lock lock];
+      if (![self isCancelled]) {
+          if (_completion) _completion(image, _request.URL, YYWebImageFromMemoryCache, YYWebImageStageFinished, nil);
+      }
+      [self _finish];
+      [_lock unlock];
+      return;
+  }
+}
+{% endhighlight %}
+**异步到imageQueue中获取图片，同时将图片回调处理放在_networkThread中进行**
+ {% highlight javascript %}
+  //忽略
+dispatch_async([self.class _imageQueue], ^{
+     __strong typeof(_self) self = _self;
+     if (!self || [self isCancelled]) return;
+     UIImage *image = [self.cache getImageForKey:self.cacheKey withType:YYImageCacheTypeDisk];
+     if (image) {
+         [self.cache setImage:image imageData:nil forKey:self.cacheKey withType:YYImageCacheTypeMemory];
+         [self performSelector:@selector(_didReceiveImageFromDiskCache:) onThread:[self.class _networkThread] withObject:image waitUntilDone:NO];
+     } else {
+         [self performSelector:@selector(_startRequest:) onThread:[self.class _networkThread] withObject:nil waitUntilDone:NO];
+     }
+ });
+ //忽略
+{% endhighlight %}
+**//收到网络请求完成回调，异步到imageQueue进行图片处理，同时异步到网络线程进行网络回调**
+ {% highlight javascript %}
+(void)connectionDidFinishLoading:(NSURLConnection *)connection {
+//忽略
+ 
+       dispatch_async([self.class _imageQueue], ^{
+                      [self performSelector:@selector(_didReceiveImageFromWeb:) onThread:[self.class _networkThread] withObject:image waitUntilDone:NO];
+       }}
+}
+{% endhighlight %}
+
+本篇幅分析至此，其中涉及到的图片格式编解码没做具体展开，侧重点主要分析了作者对网络图片的处理，以及一些线程管理操作，强烈建议可以看下YYWebImageOperation，就是自己定制operation的典型案例。下一篇将继续分析YYKit的YYModel。
+
+**任何技术有其优点必有其局限，保持观望，保持学习**
+
