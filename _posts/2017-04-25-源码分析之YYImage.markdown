@@ -13,8 +13,11 @@ categories: [tech]
 本篇幅继续描述YYKit，主要拆解YYImage目录，YYImage提供了不同种类的图片加载，包括单张图片，多张图片，gif图等，为此其设计了几个类来包括这些内容，主要为YYImage，YYFrameImage，YYSpriteSheetImage等，它们均实现了YYAnimatedImage协议，这个协议提供了一些方法，统一了单张图片，动图与静态图片的处理方式，同时也提供了YYAnimatedImageView用来承载Image，YYImageCoder用作不同格式的图片的编解码工作。这部分内容由于个人对涉及图片格式的编解码等操作不是很熟悉，不做拆解，下面主要拆解网络图片部分。
 
 - **Categories：**这部分工作主要是提供了一些分类，用于ImageView以及Button、Layer等图片的渲染及加载，大致流程如下：
+
 	* 首先cancel当前的operation，同时获取当前的哨兵，哨兵的值采用原子操作增加。
+	
 	* 异步到主线程，先判断是否传输过来的imageURL正常，以及决定是否设定placeHolder。
+	
 	*  从cache里面获取图片信息，如果存在直接加载，则进行渲染，同时回调完成，如果不存在，则异步到后台线程，配置progress和completion两个Block，通过setter配置operation，进行网络请求，成功后回调，接下来我们开始拆分setter。
 
 - **_YYWebImageSetter：**私有类，主要的作用就是通过信号量以及哨兵来控制operation的操作，确保在进行网络请求以及获取imageURL时的线程安全，其内部直接调用YYWebImageManager的方法生成operation，具体代码如下：
