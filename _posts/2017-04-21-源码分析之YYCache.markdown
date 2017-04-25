@@ -13,9 +13,9 @@ YYCache是一个线程安全的KV缓存类，里面主要包含了四个类，YY
 - **YYCache：**YYCache封装了YYMemoryCache和YYDiskCache，里面封装了很多的类NSCache接口，回调的接口数据均异步到后台线程进行回调，这个类比较简单，主要起封装的作用，最重点的步骤就是在获取object的时候，如果memoryCache中不存在，而diskCache中存在，则将其设置一份，通用的二级缓存设置策略。
 
 - **YYMemeoryCache：**通过_YYLinkedMapNode来存储key-value，通过_YYLinkedMap来管理node，提供了几个limit，分别为countLimit， costLimit， 以及ageLimit来决定何时删除，采用LRU的方式做数据的删除和插入，教科书般的单链表操作，通过pthread_mutex_lock来保持数据一致性，甚至提供了releaseOnMainThread以及releaseAsynchronously来决定是否要在主线程清理和是否异步清理，特别是在异步清理的时候用了一个非常讨巧的方式，直接异步调用一个无用的方法，代码如下：
-{% highlight javascript %}
-dispatch_async(queue, ^{[holder count]; // release in queue});
-{% endhighlight %}
+	{% highlight javascript %}
+	dispatch_async(queue, ^{[holder count]; // release in queue});
+	{% endhighlight %}
 
 - **YYDiskCache：**该类应该与YYKVStorageItem一起来讨论，YYKVStorageItem封装了文件类型存储，SQlite存储，以及文件与SQLite混合存储三种方式，同时暴露出一些接口供YYDiskCache交互，大致就是不同类型的增、删、改、查，不细分析了，而YYDiskCache则封装了类似YYMemeoryCache的API，提供给YYCache调用。而其中的数据操作都采用了dispatch_semaphore_wait来保证数据一致性。
 
