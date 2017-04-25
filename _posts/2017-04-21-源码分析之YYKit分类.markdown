@@ -12,10 +12,7 @@ categories: [tech]
 
 - 可变参数列表，采用va_list声明一个可变参数列表args，之后采用va_start将可变参数赋值给args，利用va_end释放临时参数，具体代码如下：
 {% highlight javascript %}
-va_list args; \
-va_start(args, _last_arg_); \
-[NSObject setInv:inv withSig:sig andArgs:args]; \
-va_end(args);
+va_list args; va_start(args, _last_arg_); [NSObject setInv:inv withSig:sig andArgs:args]; va_end(args);
 {% endhighlight %}
 	
 - 通过block的形式使用KVO，block的代码集中式管理优点想必大家也都清晰
