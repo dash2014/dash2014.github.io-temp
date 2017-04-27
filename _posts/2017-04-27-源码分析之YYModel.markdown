@@ -1,0 +1,47 @@
+---
+layout: post
+title:  "源码拆解之YYKit系列六"
+subtitle: ""
+date:   2017-04-27 19:50:01
+categories: [tech]
+---
+
+> 源码拆解之YYKit系列六（YYModel）
+
+本篇幅来拆解YYModel，YYModel主要提供了一些模型转换的能力，包括model转换成JSON，以及JSON转换成model等，具体可以看下图：
+![Alt text](http://7xsw5d.com1.z0.glb.clouddn.com/a.png)
+下面根据其提供的整个功能进行拆解：
+
+- **json转字典：**简单的利用OC的NSJSONSerialization进行转换。
+
+- **json转model：**调用上述方法，现将json转成字典，后调用下面将字典转成model。
+
+- **字典转model：**首先创建一个**_YYModelMeta**，这个类我后续拆解，之后实例化一个cls对应的对象，之后调用通过字典配置模型的方法modelSetWithDictionary进行配置。
+	- **_YYModelMeta** 首先从缓存中读取model class meta，如果没有则根据cls生成_YYModelMeta对象，**此处用到自选锁**，看了下作者用了很多种锁的写法，后面单独开一篇整理一下各种锁的使用。_YYModelMeta持有了_classInfo对象，YYClassInfo里面就是典型的runtime应用，包括method，property， ivar的操作，同时也写了两个cache，metaCache和classCache用来设置和读取YYClassInfo对象。
+
+- **model转JSON：**通过_YYModelMeta读取model对象，之后对其进行递归映射。
+
+- **model copy：**通过消息发送机制objc_msgSend，将_YYModelMeta的内容set到新的对象中。
+
+- **model encode：**逐一对对象的每一个属性值进行encode。
+
+- **model hash：**需要对对象的每一个属性值进行hash，之后进行异或操作。
+
+- **model equal：**通过几个方面判定两个model是否相同：
+	- 类型是否相同
+	- 是否属于OC基础类型，直接调用isEqual方法判断
+	- hash值是否相同
+	- 属性值逐一判断
+
+YYModel里面用了大量的runtime操作，一些具体的内容，包括方法，属性，变量的增删改查等之后有时间整理一下，作者对YYModel的性能做了实验和分析，具体可以参照他的博客http://blog.ibireme.com，个人觉得这个性能之所以好，应该主要从下面几个方面入手。
+
+-	大量的C方法调用
+-	内联函数的大量使用
+-	CoreFoundation层次API的大量使用而不是Foundation，包括在一些容器的遍历及字典、数组的取值和赋值等操作上面
+-	runtime的使用，能使用ivar就不用property，能使用property就不用KVC
+-	缓存机制的使用，包括metaCache和classCache
+
+本篇就写到这里，这部分内容可以好好的学一下runtime的使用。
+
+**任何技术有其优点必有其局限，保持观望，保持学习**
+
