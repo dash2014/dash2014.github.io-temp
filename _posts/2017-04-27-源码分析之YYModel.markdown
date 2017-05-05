@@ -16,9 +16,9 @@ categories: [tech]
 
 - **json转model：**调用上述方法，现将json转成字典，后调用下面将字典转成model。
 
-- **字典转model：**首先创建一个**_YYModelMeta**，这个类我后续拆解，之后实例化一个cls对应的对象，之后调用通过字典配置模型的方法modelSetWithDictionary进行配置。
+- **字典转model：**首先创建一个**_YYModelMeta**，之后实例化一个cls对应的对象，之后调用通过字典配置模型的方法modelSetWithDictionary进行配置。
 
-	- **_YYModelMeta** 首先从缓存中读取model class meta，如果没有则根据cls生成_YYModelMeta对象，**此处用到自选锁**，看了下作者用了很多种锁的写法，后面单独开一篇整理一下各种锁的使用。_YYModelMeta持有了_classInfo对象，YYClassInfo里面就是典型的runtime应用，包括method，property， ivar的操作，同时也写了两个cache，metaCache和classCache用来设置和读取YYClassInfo对象。
+	- **_YYModelMeta** 首先从缓存中读取model class meta，如果没有则根据cls生成_YYModelMeta对象，**此处用到自选锁**，看了下作者用了很多种锁的写法，后面单独开一篇整理一下各种锁的使用。_YYModelMeta持有了_classInfo对象，YYClassInfo里面就是典型的runtime应用，包括method，property，ivar的操作，同时也写了两个cache，metaCache和classCache用来设置和读取YYClassInfo对象。
 
 - **model转JSON：**通过_YYModelMeta读取model对象，之后对其进行递归映射。
 
