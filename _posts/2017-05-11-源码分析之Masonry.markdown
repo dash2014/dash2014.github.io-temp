@@ -11,7 +11,7 @@ categories: [tech]
 Masonry，用于简化页面布局的第三方开源库，当前github上面14.7k个star，具体的地址为：https://github.com/SnapKit/Masonry。Masonry，主要采用链式编程的方式，简化了苹果原生AutoLayout大量的代码布局。下面逐步了解一下Masonry。
 
 ## 链式编程：
-什么是链式编程？简单的说就是通过点语法将某个流程的代码块一直写下去。具体到Object-C中，则可以采用两种方式书写。
+什么是链式编程？简单的说就是通过点语法将某个流程的代码块一直写下去。具体到Objective-C中，则可以采用两种方式书写。
 
 - 需要处于链条上的方法必须返回一个block
 
