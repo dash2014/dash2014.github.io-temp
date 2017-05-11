@@ -47,7 +47,7 @@ people.eat("sandwich").work("5 hours");
 ## 语法糖
 Syntactic sugar，通常泛指某些语法，让程序员更便捷的使用，来增加程序的可读性，对语言的功能没有什么影响。在OC中包括枚举值的绑定，字面量赋值取值，当然也包括上面提到的点语法，等等。
 
-##Masonry
+## Masonry
 本篇幅均以添加约束为例进行拆分，移除及更新逻辑与此类似，不再赘述。具体的代码调用方式类似这样：
 {% highlight javascript %}
 [view1 mas_makeConstraints:^(MASConstraintMaker *make) {
