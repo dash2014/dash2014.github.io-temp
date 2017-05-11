@@ -1,0 +1,82 @@
+---
+layout: post
+title:  "源码分析之Masonry"
+subtitle: ""
+date:   2017-05-11 11:50:01
+categories: [tech]
+---
+
+> 源码分析之Masonry
+
+Masonry，用于简化页面布局的第三方开源库，当前github上面14.7k个star，具体的地址为：https://github.com/SnapKit/Masonry。Masonry，主要采用链式编程的方式，简化了苹果原生AutoLayout大量的代码布局。下面逐步了解一下Masonry。
+
+## 链式编程：
+什么是链式编程？简单的说就是通过点语法将某个流程的代码块一直写下去。具体到Object-C中，则可以采用两种方式书写。
+
+- 需要处于链条上的方法必须返回一个block
+
+- block必须存在参数，及返回值，而这个返回值必须是对象本身。具体的定义方式类似这样：
+{% highlight javascript %}
+@interface People : NSObject   
+//- (People *(^)(NSString*))eat;  
+//- (People *(^)(NSString*))work;   
+@end  
+@implementation People  
+//- (People *(^)(NSString*))eat {  
+    return ^(NSString* food){  
+        []self eatFood:food];
+        return self;  
+    };  
+}  
+//- (People *(^)(NSString*))work {  
+    return ^(NSString* time){  
+        []self workTime:time];
+        return self;  
+    };  
+}  
+{% endhighlight %}
+
+- 在需要用到的地方就可以通过点语法来进行调用。这样这一个流程就会按照顺序执行，看上去简单而清晰，类似这样。
+{% highlight javascript %}
+People *people = [People new];
+people.eat("sandwich").work("5 hours");
+{% endhighlight %}
+
+那总结一下链式编程巧妙的利用了语法糖的概念，使得整个流程通过点语法巧妙的写在了一条语句上，看上去直观清晰，因此在一些将过程颗粒化之后重新进行组装的业务上面可以使用。
+
+## 语法糖
+Syntactic sugar，通常泛指某些语法，让程序员更便捷的使用，来增加程序的可读性，对语言的功能没有什么影响。在OC中包括枚举值的绑定，字面量赋值取值，当然也包括上面提到的点语法，等等。
+
+##Masonry
+本篇幅均以添加约束为例进行拆分，移除及更新逻辑与此类似，不再赘述。具体的代码调用方式类似这样：
+{% highlight javascript %}
+[view1 mas_makeConstraints:^(MASConstraintMaker *make) {
+ make.top.equalTo(superview.mas_top).with.offset(padding.top); //with is an optional semantic filler
+ make.left.equalTo(superview.mas_left).with.offset(padding.left);   make.bottom.equalTo(superview.mas_bottom).with.offset(-padding.bottom);
+ make.right.equalTo(superview.mas_right).with.offset(-padding.right);
+}];
+{% endhighlight %}
+
+- **Categories:**，UIView+MASAdditions & ViewController+MASAdditions，里面封装了mas_makeConstraints的方法，该方法入参是一个block，返回一个数组，block的入参是一个*MASConstraintMaker*对象，返回void类型。这个方法主要做了以下几件事情：
+
+	- 禁止将Autoresizing转成Autolayout的约束
+
+	- 创建一个constraintMaker， 并作为block的入参，供用户使用，类似上述代码的**make**变量。
+
+	- 调用constraintMaker的install方法，返回当前View的所有约束，当然是MASConstraint类型的。
+
+- **MASConstraintMaker：**核心工厂类，其定义了一些MASConstraint类型的属性，当前的视图View，以及相应的attributes。该类在执行make.top或者其他属性的时候，均会先调用*addConstraintWithLayoutAttribute：*方法建立MASConstraint类型的约束，并将其放入数组中，之后执行*install*方法，*install*方法会调用MASConstraint的*install*方法添加约束。在MASConstraint中*install*是一个虚方法，需要其子类实现。
+
+- **MASConstraint：**继承自NSLayoutConstraint，抽象了一些属性比如top等，以及一些方法，比如上述代码中的*equalTo*等，主要通过语法糖的方式来保证链式调用，其具体的方法由其子类实现。
+
+- **MASViewConstraint：**MASConstraint的子类，根据约束的优先级，属性等，将约束添加到指定的位置。*install*方法的具体实现就在这里。
+
+- **MASCompositeConstraint：**同样也是MASConstraint的子类，主要用于同时建立多个constraint。
+
+- **MASViewAttribute：**某个view的某个attribute，其主要封装了一个UIView以及NSLayoutAttribute。
+
+至此Masonry就已经拆解结束了，其作为iOS开发中标志性的采用链式语法进行方法调用的仓库之一，还是很值得学习和参考的，很好的简化了苹果原生的NSLayoutConstraint带来的冗长代码，当然苹果的IB布局玩转约束也是可以值得一试的。
+
+
+**任何技术有其优点必有其局限，保持观望，保持学习**
+
